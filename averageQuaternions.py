@@ -61,3 +61,31 @@ def averageQuaternions(Q):
 
     # return the real part of the largest eigenvector (has only real part)
     return np.real(eigenVectors[:,0].A1)
+
+# Average multiple quaternions with specific weights
+# The weight vector w must be of the same length as the number of rows in the
+# quaternion maxtrix Q
+def weightedAverageQuaternions(Q, w):
+    # Number of quaternions to average
+    M = Q.shape[0]
+    A = npm.zeros(shape=(4,4))
+    weightSum = 0
+
+    for i in range(0,M):
+        q = Q[i,:].transpose()
+        qT = q.transpose()
+        wI = w[i]
+        A = wI*(q*qT)+A
+        weightSum += wI
+
+    # scale
+    A = (1.0/weightSum)*A
+
+    # compute eigenvalues and -vectors
+    eigenValues, eigenVectors = np.linalg.eig(A)
+
+    # Sort by largest eigenvalue
+    eigenVectors = eigenVectors[:,eigenValues.argsort()[::-1]]
+
+    # return the real part of the largest eigenvector (has only real part)
+    return np.real(eigenVectors[:,0].A1)
