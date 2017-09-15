@@ -16,7 +16,7 @@
 # Code based on:
 #
 # Tolga Birdal. "averaging_quaternions" Matlab code.
-# Linkhttp://jp.mathworks.com/matlabcentral/fileexchange/40098-tolgabirdal-averaging-quaternions
+# http://jp.mathworks.com/matlabcentral/fileexchange/40098-tolgabirdal-averaging-quaternions
 #
 # Comparison between different methods of averaging:
 #
@@ -33,7 +33,7 @@
 # http://number-none.com/product/Understanding%20Slerp,%20Then%20Not%20Using%20It/
 #
 
-import numpy as np
+import numpy
 import numpy.matlib as npm
 
 # Q is a Nx4 numpy matrix and contains the quaternions to average in the rows.
@@ -46,21 +46,19 @@ def averageQuaternions(Q):
     A = npm.zeros(shape=(4,4))
 
     for i in range(0,M):
-        q = Q[i,:].transpose()
-        qT = q.transpose()
-        A = q*qT+A
+        q = Q[i,:]
+        # multiply q with its transposed version q' and add A
+        A = numpy.outer(q,q) + A
 
     # scale
     A = (1.0/M)*A
-
     # compute eigenvalues and -vectors
-    eigenValues, eigenVectors = np.linalg.eig(A)
-
+    eigenValues, eigenVectors = numpy.linalg.eig(A)
     # Sort by largest eigenvalue
     eigenVectors = eigenVectors[:,eigenValues.argsort()[::-1]]
-
     # return the real part of the largest eigenvector (has only real part)
-    return np.real(eigenVectors[:,0].A1)
+    return numpy.real(eigenVectors[:,0].A1)
+
 
 # Average multiple quaternions with specific weights
 # The weight vector w must be of the same length as the number of rows in the
@@ -72,20 +70,18 @@ def weightedAverageQuaternions(Q, w):
     weightSum = 0
 
     for i in range(0,M):
-        q = Q[i,:].transpose()
-        qT = q.transpose()
-        wI = w[i]
-        A = wI*(q*qT)+A
+        q = Q[i,:]
+        A = w[i] * numpy.outer(q,q) + A
         weightSum += wI
 
     # scale
     A = (1.0/weightSum)*A
 
     # compute eigenvalues and -vectors
-    eigenValues, eigenVectors = np.linalg.eig(A)
+    eigenValues, eigenVectors = numpy.linalg.eig(A)
 
     # Sort by largest eigenvalue
     eigenVectors = eigenVectors[:,eigenValues.argsort()[::-1]]
 
     # return the real part of the largest eigenvector (has only real part)
-    return np.real(eigenVectors[:,0].A1)
+    return numpy.real(eigenVectors[:,0].A1)
