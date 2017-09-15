@@ -72,10 +72,10 @@ def weightedAverageQuaternions(Q, w):
     for i in range(0,M):
         q = Q[i,:]
         A = w[i] * numpy.outer(q,q) + A
-        weightSum += wI
+        weightSum += w[i]
 
     # scale
-    A = (1.0/weightSum)*A
+    A = (1.0/weightSum) * A
 
     # compute eigenvalues and -vectors
     eigenValues, eigenVectors = numpy.linalg.eig(A)
