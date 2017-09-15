@@ -1,7 +1,7 @@
 # (Correctly) averaging quaternions
 Python function for correct averaging of multiple quaternions. Quaternions representations provide no trivial means of averaging multiple quaternions. Even though avaraging of the components can be used in some cases, this approach has major drawbacks (as explained in the paper cited below).
 
-The function given here implements are more mathematically correct way of averaging. The paper also provides a way to do a weighted average, but htis function is not implemented here (yet?).
+The function given here implements are more "mathematically correct" way of averaging. The paper also provides a way to do a weighted average (individual "importance of each quaternion"), which is implemented as well.
 
 ## In principle based on:
 
@@ -13,14 +13,14 @@ Link: https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/20070017872.pdf
 ## Code based on:
 
 Tolga Birdal. "averaging_quaternions" Matlab code.
-Linkhttp://jp.mathworks.com/matlabcentral/fileexchange/40098-tolgabirdal-averaging-quaternions
+Link: http://jp.mathworks.com/matlabcentral/fileexchange/40098-tolgabirdal-averaging-quaternions
 
 ## Note on efficiency
 
 This method is computationally expensive compared to naive mean averaging.
 If only low accuracy is required (or the quaternions have similar orientations),
 then quaternion averaging can possibly be done through simply averaging the
-components.
+components (will require normalization).
 
 ### Comparison between different methods of averaging:
 
